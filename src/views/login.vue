@@ -38,7 +38,9 @@ export default {
           verifyCode: '',
           errors: {},
           btnTitle: '获取验证码',
-          disabled: false
+          disabled: false,
+          localPhone: '',
+          localCode: ''
       }
     },
     components: {
@@ -48,40 +50,57 @@ export default {
         isClick(){
             if (!this.phone || !this.verifyCode) return true;
             return false;
-        }
+        },
+       
+    },
+   mounted(){
+        this.saveNamePwd();
     },
     methods: {
+        saveNamePwd(){
+            try{
+                let localSave = localStorage.getItem('ele_validate');
+                let localArr = localSave.split(',');
+                this.localPhone = localArr[0];
+                this.localCode = localArr[1];
+                this.phone = this.localPhone;
+                this.verifyCode = this.localCode;
+            } catch(e){
+
+            }
+                
+        },
         handleLogin(){
-            this.$axios.post('/api/posts/sms_back',{
-                phone: this.phone,
-                code: this.verifyCode
-            }).then(res => {
-                console.log(res)
-            },reason => {
-                    console.log(reason)
-                })
+           
+            if((parseInt(this.verifyCode) === parseInt(this.localCode)) && (parseInt(this.phone) === parseInt(this.localPhone))){
+               localStorage.setItem('ele_login',true);
+               this.$router.push("/");
+            } else if(!(parseInt(this.phone) === parseInt(this.localPhone))){
+                this.errors = {
+                    phone: '请输入正确的手机号码'
+                }
+            } else {
+                this.errors = {
+                    code: "请输入正确的验证码"
+                }
+            }
+
         },
         getVerifyCode(){
-            if(this.validatePhnoe()){
-                //发送网络请求
-var instance = this.$axios.create({ headers: {'content-type': 'application/x-www-form-urlencoded'} });
-                instance.post('/api/posts/sms_send',{
-                    sid: '63fd5fcd302a56811393818f71ced935',
-                    token: '2d34fe3ca224dc2a678b8862fc9ea4aa',
-                    appid: '88987ee1939a46c48c6a49e5c92a1435',
-                    templateid: 548827,
-                    mobile: this.phone
-                }).then(res => {
-                    console.log(res);
-                },reason => {
-                    console.log(reason)
-                })
-
+            if(this.validatePhone()){
                 this.validateBtn();
+                let randomCode = Math.floor(Math.random() * 1000000);
+                let phone = this.phone;
+                alert(randomCode);
+                localStorage.setItem('ele_validate',[phone,randomCode]);
+                let localSave = localStorage.getItem('ele_validate');
+                let localArr = localSave.split(',');
+                this.localPhone = localArr[0];
+                this.localCode = localArr[1];
             }
         },
         //点击时验证手机号
-        validatePhnoe(){
+        validatePhone(){
             if(!this.phone){
                 this.errors = {
                     phone: '手机号码不能为空'
