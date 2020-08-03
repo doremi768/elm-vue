@@ -27,6 +27,16 @@ Vue.use(VueRouter)
         path: '/Me',
         name: '/me',
         component: () => import('../views/Me.vue')
+      },
+      {
+        path: '/Address',
+        name: '/address',
+        component: () => import('../views/Address.vue')
+      },
+      {
+        path: '/city',
+        name: 'city',
+        component: () => import('../views/City.vue')
       }
       
     ]
