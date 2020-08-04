@@ -8,7 +8,7 @@
           <button @click="$router.push({name:'address',params:{city: city}})">取消</button>
       </div>
       <div style="height:100%" v-if="searchList.length == 0">
-        <Location @click="selectCity({name:city})" :address="city" />
+        <Location @goback="selectCity(city)" :address="city" />
         <Alphabet @selectCity="selectCity" ref="allcity" :cityInfo="cityInfo" :cityHot="cityHot"/>
       </div>
       <div class="search_list" v-else>
@@ -107,9 +107,7 @@ export default {
            this.cityInfo = citySort(cityNameArr);
         },
         selectCity(city){
-            console.log(1)
             this.$router.push({name: 'address',params:{city:city}})
-                console.log(err)
         },
         searchCity(){
             if(!this.city_val){

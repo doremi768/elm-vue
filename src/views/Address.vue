@@ -138,11 +138,15 @@ export default {
 .area li {
   border-bottom: 1px solid #eee;
   padding: 8px 16px;
-  color: #aaa;
 }
+
 .area li h4 {
   font-weight: bold;
   color: #333;
   margin-bottom: 5px;
+}
+.area li p{
+  font-size: 13px;
+  line-height: 15px;
 }
 </style>

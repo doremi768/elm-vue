@@ -6,17 +6,35 @@
           <span>{{address}}</span>
           <i class="fa fa-sort-desc"></i>
         </div>
+        
+      </div>
+      <div class="search_wrap">
         <div class="shop_search">
           <i class="fa fa-search"></i>
           搜索商家 商家名称
         </div>
       </div>
+
+      <div id="container">
+        <!-- 轮播 -->
+      <mt-swipe :auto="4000" class="swiper">
+        <mt-swipe-item v-for="(img,index) in swipeImgs" :key="index">
+          <img :src="img" alt>
+        </mt-swipe-item>
+      </mt-swipe>
+      </div>
   </div>
 </template>
 
 <script>
+import { Swipe, SwipeItem } from 'mint-ui';
 export default {
     name: 'home',
+    data() {
+      return {
+        swipeImgs: []
+      }
+    },
    computed: {
      address(){
        if(this.$store.getters.address){
@@ -31,6 +49,16 @@ export default {
         this.$store.getters.location.addressComponent.province
       )
      }
+   },
+   created(){
+     this.getData();
+   },
+   methods: {
+     getData(){
+       this.$axios('/api/profile/shopping').then(res => {
+         this.swipeImgs = res.data.swipeImgs;
+       })
+     }
    }
 };
 </script>
@@ -42,9 +70,9 @@ export default {
   overflow: auto;
   box-sizing: border-box;
 }
-.header{
+.header,.search_wrap{
   background-color: #009eef;
-  padding: 16px;
+  padding: 10px 16px;
 }
 .header .address_map {
   color: #fff;
@@ -60,12 +88,26 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.header .shop_search {
-  margin-top: 10px;
+.search_wrap .shop_search {
+  /* margin-top: 10px; */
   background-color: #fff;
   padding: 10px 0;
   border-radius: 4px;
   text-align: center;
   color: #aaa;
+}
+.search_wrap {
+  position: sticky;
+  top: 0px;
+  z-index: 999;
+  box-sizing: border-box;
+}
+.swiper {
+  height: 100px;
+  /* overflow: hidden; */
+}
+.swiper img{
+  width: 100%;
+  height: 100px;
 }
 </style>
