@@ -4,13 +4,13 @@
       <div class="city_search">
           <div class="search">
               <span class="city" @click="$router.push('/city')">
-                  {{City}}
+                  {{city}}
                   <i class="fa fa-angle-down"></i>
               </span>
               <i class="fa fa-search"></i>
               <input type="text" v-model="search_val" placeholder="小区/写字楼/学校">
           </div>
-          <Location :address="address" />
+          <Location @goback="selectAddress" :address="address" />
       </div>
       <div class="area">
           <ul class="area_list" v-for="(item,index) in areaList" :key="index">
@@ -40,14 +40,14 @@ export default {
         Location
     },
     computed: {
-        City(){
-            try{
-                this.city = this.$store.getters.location.addressComponent.city;
-                return  this.city;
-            } catch(e){
+        // City(){
+        //     try{
+        //         this.city = this.$store.getters.location.addressComponent.city;
+        //         return  this.city;
+        //     } catch(e){
                 
-            }
-        },
+        //     }
+        // },
         address(){
             return this.$store.getters.address;
         }
@@ -71,16 +71,27 @@ export default {
          }
      },
      methods: {
-         searchPlace(){
-             console.log(this.search_val)
-         },
+        //  searchPlace(){
+        //      console.log(this.search_val)
+        //  },
          selectAddress(item){
+           if(item){
              //设置地址，并传给首页
              this.$store.dispatch('setAddress',item.district + item.address + item.name);
+           } else {
+             this.$store.dispatch('setAddress',this.address);
+             
+           }
              //跳转
              this.$router.push('/home')
          }
-     }
+     },
+      beforeRouteEnter(to, from, next) {
+      // console.log(to.params.city + "test");
+      next(vm => {
+        vm.city = to.params.city;
+    });
+  }
 }
 </script>
 
@@ -105,6 +116,7 @@ export default {
   border-radius: 10px;
   box-sizing: border-box;
   line-height: 40px;
+  overflow: hidden;
 }
 .search .city {
   padding: 0 10px;

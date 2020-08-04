@@ -15,22 +15,22 @@ Vue.use(VueRouter)
       },
       {
         path: '/home',
-        name: '/home',
+        name: 'home',
         component: () => import('../views/Home.vue')
       },
       {
         path: '/Order',
-        name: '/order',
+        name: 'order',
         component: () => import('../views/Order.vue')
       },
       {
         path: '/Me',
-        name: '/me',
+        name: 'me',
         component: () => import('../views/Me.vue')
       },
       {
         path: '/Address',
-        name: '/address',
+        name: 'address',
         component: () => import('../views/Address.vue')
       },
       {

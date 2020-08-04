@@ -3,13 +3,20 @@
       <div class="search_wrap">
           <div class="search">
               <i class="fa fa-search"></i>
-              <input type="text" placeholder="输入城市名">
+              <input v-model="city_val" type="text" placeholder="输入城市名">
           </div>
-          <button @click="$router.go(-1)">取消</button>
+          <button @click="$router.push({name:'address',params:{city: city}})">取消</button>
       </div>
-      <div style="height:100%">
-        <Location :address="City" />
-        <Alphabet ref="allcity" :cityInfo="cityInfo" :cityHot="cityHot"/>
+      <div style="height:100%" v-if="searchList.length == 0">
+        <Location @click="selectCity({name:city})" :address="city" />
+        <Alphabet @selectCity="selectCity" ref="allcity" :cityInfo="cityInfo" :cityHot="cityHot"/>
+      </div>
+      <div class="search_list" v-else>
+          <ul>
+              <li @selectCity="selectCity(item)" v-for="(item,index) in searchList" :key="index">
+                  {{item}}
+              </li>
+          </ul>
       </div>
   </div>
 </template>
@@ -24,7 +31,9 @@ export default {
         return {
             city_val: '',
             cityInfo: [],
-            cityHot: ['北京','上海','深圳','成都','南京','长沙']
+            cityHot: ['北京','上海','深圳','成都','南京','长沙'],
+            allCities: [],
+            searchList: []
         }
     },
     components: {
@@ -32,17 +41,25 @@ export default {
         Alphabet
     },
     computed: {
-        City(){
+        city() {
             try{
-                this.city = this.$store.getters.location.addressComponent.city;
-                return  this.city;
+              return (
+                 this.$store.getters.location.addressComponent.city ||
+                 this.$store.getters.location.addressComponent.province
+                );
             } catch(e){
-                
+
             }
-        }
+            
+      }
     },
     created() {
         this.getCityInfo();
+    },
+    watch: {
+        city_val(){
+            this.searchCity();
+        }
     },
     methods: {
         getCityInfo(){
@@ -86,8 +103,22 @@ export default {
             }
            
            let cityNameArr = Array.from(cityName);
+           this.allCities = cityNameArr;
            this.cityInfo = citySort(cityNameArr);
-           console.log(this.cityInfo)
+        },
+        selectCity(city){
+            console.log(1)
+            this.$router.push({name: 'address',params:{city:city}})
+                console.log(err)
+        },
+        searchCity(){
+            if(!this.city_val){
+                this.searchList = [];
+            } else {
+                this.searchList = this.allCities.filter(item => {
+                    return item.indexOf(this.city_val) != -1;
+                })
+            }
         }
     }
 }
