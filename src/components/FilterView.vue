@@ -1,5 +1,5 @@
 <template>
-<div :class="{'open': isSort}" @click.self="hideView">
+<div :class="{'open': isSort || isCreen}" @click.self="hideView">
 
     <!-- 导航 -->
   <div class="filter_wrap" v-if="filterData">
@@ -26,6 +26,28 @@
           </li>
       </ul>
   </section>
+
+  <!-- 筛选 -->
+  <section class="filter-extend" v-if="isCreen">
+      <div class="filter-sort">
+        <div class="morefilter" v-for="(screen,index) in filterData.screenBy" :key="index">
+          <p class="title">{{screen.title}}</p>
+          <ul>
+            <li v-for="(item,i) in screen.data" :key="i" 
+            :class="{'selected': item.select}"
+            @click="selectScreen(item,screen)"
+            >
+              <img v-if="item.icon" :src="item.icon" alt="">
+              <span>{{item.name}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="morefilter-btn">
+        <span class="morefilter-clear" :class="{'edit':edit}" @click="clearFilter">清空</span>
+        <span class="morefilter-ok" @click="filterOk">确定</span>
+      </div>
+  </section>
 </div>
 </template>
 
@@ -36,11 +58,25 @@ export default {
         return {
             currentFilter: 0,
             isSort: false,   //蒙版是否显示
-            currentSort: 0
+            currentSort: 0,
+            isCreen: false
         }
     },
     props: {
         filterData: Object
+    },
+    computed: {
+      edit(){
+        let edit = false;
+        this.filterData.screenBy.forEach( screen => {
+          screen.data.forEach( item => {
+            if(item.select){
+              edit = true;
+            }
+          })
+        })
+        return edit;
+      }
     },
     methods: {
         filterSort(index) {
@@ -57,6 +93,9 @@ export default {
                     this.$emit('updata',{condation:  this.filterData.navTab[1].condition})
                     break;
                 case 3: 
+                    this.isCreen = true;
+                    this.isSort = false;
+                    this.$emit('searchFixed',true);
                     break;                    
                 default: 
                     this.hideView();
@@ -65,8 +104,10 @@ export default {
             }
             
         },
+        //关闭弹出层
         hideView() {
             this.isSort = false;
+            this.isCreen = false;
             this.$emit('searchFixed',false);
         },
         selectSort(item,index) {
@@ -76,6 +117,46 @@ export default {
 
             //更新数据进行排序
             this.$emit('updata',{condation: item.code})
+        },
+        selectScreen(item,screen){
+          if(screen.id !== 'MPI'){
+            screen.data.forEach(element => {
+              element.select = false
+            });
+          }
+          item.select = !item.select;
+        },
+        //清空按钮实现
+        clearFilter(){
+          this.filterData.screenBy.forEach( screen => {
+            screen.data.forEach( item => {
+              item.select = false;
+            })
+         })
+        },
+        //点击按钮功能实现
+        filterOk(){
+          let screenData = {
+            MPI: '',
+            offer: '',
+            per: ''
+          }
+          let mpiStr = '';
+          this.filterData.screenBy.forEach( screen => {
+            screen.data.forEach( item => {
+              if(item.select) {
+                if(screen.id !== 'MPI'){
+                  //单选
+                } else {
+                  //多选
+                  mpiStr += item.code + ',';
+                  screenData[screen.id] = mpiStr;
+                }
+              }
+            })
+         })
+         this.$emit('updata',{condation: screenData});
+         this.hideView();
         }
     }
 }
