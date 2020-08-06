@@ -28,5 +28,6 @@ export default {
 .index{
   width: 100%;
   height: calc(100% - 45px);
+  background-color: #fff;
 }
 </style>

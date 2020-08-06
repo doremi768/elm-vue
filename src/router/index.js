@@ -29,6 +29,11 @@ Vue.use(VueRouter)
         component: () => import('../views/Me.vue')
       },
       {
+        path: '/Search',
+        name: 'search',
+        component: () => import('../views/Search.vue')
+      },
+      {
         path: '/Address',
         name: 'address',
         component: () => import('../views/Address.vue')
