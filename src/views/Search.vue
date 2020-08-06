@@ -1,6 +1,6 @@
 <template>
   <div class="Search">
-      <Headers :isLeft="true" title="搜索"/>
+      <Headers :isLeft="true" title="搜索" :class="{'headers':headers}"/>
       <div class="search_header">
           <form class="search_wrap">
               <i class="fa fa-search"></i>
@@ -21,13 +21,25 @@
               <SearchIndex @listClick="shopItemClick" :data="result.words" />
           </div>
       </div>
-      <div class="container" v-if="showShop">商家信息</div>
+      <div class="container" v-if="showShop">
+      <FilterView :filterData="filterData" @updata="updata"/>
+      <div class="shoplist" v-infinite-scroll="loadMore"
+      infinite-scroll-distance="1"
+      :infinite-scroll-disabled="loading"
+      >
+        <IndexShop v-for="(item,index) in restaurants" 
+        :key="index" :restaurant="item.restaurant"/>
+      </div>
+      </div>
   </div>
 </template>
 
 <script>
 import Headers from '../components/Headers'
 import SearchIndex from '../components/SearchIndex'
+import FilterView from '../components/FilterView'
+import IndexShop from '../components/IndexShop'
+import { InfiniteScroll } from 'mint-ui';
 export default {
     name: 'search',
     data() {
@@ -35,12 +47,21 @@ export default {
             key_word: '',   //存输入框中的数据
             result: null,   //存搜索数据
             empty: false,    //用来判断是否显示 404
-            showShop: false  //判断商品信息是否展示
+            showShop: false,  //判断商品信息是否展示
+            filterData: null,  //存filter接口中的数据
+            headers: false,    //控制高度
+            restaurants: [],    //商家信息
+            page: 0,
+            size: 7,
+            loading: false,
+            data: null
         }
     },
     components: {
         Headers,
-        SearchIndex
+        SearchIndex,
+        FilterView,
+        IndexShop
     },
     watch: {
         key_word(){
@@ -48,6 +69,11 @@ export default {
             this.showShop = false;
             this.keyWordChange();
         }
+    },
+    created(){
+      this.$axios('/api/profile/filter').then(res => {
+         this.filterData = res.data;
+       });
     },
     methods: {
         keyWordChange(){
@@ -67,7 +93,27 @@ export default {
             }
         },
         shopItemClick(){
-            this.showShop = true;
+          this.page = 0;
+          this.restaurants = [];
+          this.showShop = true;
+        },
+        //排序
+        updata(condation){
+          this.data = condation;
+          this.headers = true
+          this.shopItemClick();
+        },
+        loadMore(){
+          this.page++;
+          this.$axios.post(`/api/profile/restaurants/${this.page}/${this.size}`,this.data).then(res => {
+          if(res.data.length > 0){
+            res.data.forEach(item => {
+              this.restaurants.push(item);
+            })
+          } else {
+            this.loading = true;
+          }
+       })
         }
     }
     
@@ -75,6 +121,10 @@ export default {
 </script>
 
 <style scoped>
+.headers{
+  height: 54px;
+  z-index: 999;
+}
 .search {
   width: 100%;
   height: 100%;
@@ -82,7 +132,7 @@ export default {
   box-sizing: border-box;
 }
 .search_header {
-  margin-top: 45px;
+  margin-top: 55px;
   background: #fff;
   padding: 0 4.266667vw;
 }
@@ -119,7 +169,9 @@ export default {
   margin-left: 2.933333vw;
   font-size: 14px;
 }
-
+.shoplist{
+  padding-bottom: 13%;
+}
 .shop {
   width: 100%;
   height: calc(100% - 95px);

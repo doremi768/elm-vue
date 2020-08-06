@@ -5,7 +5,7 @@ module.exports = {
     port: 8082,
     https: false,
     hotOnly: false,
-    proxy: {
+    proxy: { 
       // 配置跨域
       '/api': {
         target: 'https://element-interface.herokuapp.com/api/',
