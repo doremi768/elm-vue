@@ -42,6 +42,29 @@ Vue.use(VueRouter)
         path: '/city',
         name: 'city',
         component: () => import('../views/City.vue')
+      },
+      {
+        path: '/shop',
+        name: 'shop',
+        redirect: '/goods',
+        component: () => import('../views/Shops/Shop.vue'),
+        children: [
+          {
+            path: '/goods',
+            name: 'goods',
+            component: () => import('../views/Shops/Goods.vue')
+          },
+          {
+            path: '/seller',
+            name: 'seller',
+            component: () => import('../views/Shops/Seller.vue')
+          },
+          {
+            path: '/comments',
+            name: 'comments',
+            component: () => import('../views/Shops/Comments.vue')
+          }
+        ]
       }
       
     ]
@@ -56,7 +79,8 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  linkActiveClass: 'active',
 })
 
 router.beforeEach((to,from,next) => {
