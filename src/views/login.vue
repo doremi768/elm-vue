@@ -30,6 +30,7 @@
 
 <script>
 import inputBox from '../components/inputBox';
+import { Indicator } from 'mint-ui';
 export default {
     name: 'login',
     data(){
@@ -53,84 +54,80 @@ export default {
         },
        
     },
-   mounted(){
-        this.saveNamePwd();
-    },
+//    mounted(){
+//         this.saveNamePwd();
+//     },
     methods: {
-        saveNamePwd(){
-            try{
-                let localSave = localStorage.getItem('ele_validate');
-                let localArr = localSave.split(',');
-                this.localPhone = localArr[0];
-                this.localCode = localArr[1];
-                this.phone = this.localPhone;
-                this.verifyCode = this.localCode;
-            } catch(e){
-
-            }
-                
-        },
-        handleLogin(){
-           
-            if((parseInt(this.verifyCode) === parseInt(this.localCode)) && (parseInt(this.phone) === parseInt(this.localPhone))){
-               localStorage.setItem('ele_login',true);
-               this.$router.push("/");
-            } else if(!(parseInt(this.phone) === parseInt(this.localPhone))){
-                this.errors = {
-                    phone: '请输入正确的手机号码'
-                }
-            } else {
-                this.errors = {
-                    code: "请输入正确的验证码"
-                }
-            }
-
-        },
-        getVerifyCode(){
-            if(this.validatePhone()){
-                this.validateBtn();
-                let randomCode = Math.floor(Math.random() * 1000000);
-                let phone = this.phone;
-                alert(randomCode);
-                localStorage.setItem('ele_validate',[phone,randomCode]);
-                let localSave = localStorage.getItem('ele_validate');
-                let localArr = localSave.split(',');
-                this.localPhone = localArr[0];
-                this.localCode = localArr[1];
-            }
-        },
-        //点击时验证手机号
-        validatePhone(){
-            if(!this.phone){
-                this.errors = {
-                    phone: '手机号码不能为空'
-                };
-                return false;
-            } else if (!/^1[345678]\d{9}$/.test(this.phone)){
-                this.errors = {
-                    phone: '请输入正确的手机号码'
-                };
-                return false;
-            } else {
-                return true;
-            }
-        },
-        //倒计时
-        validateBtn(){
-            this.errors = {};
-            let time = 10;
-            let timer = setInterval(()=>{
-                if(time == 0){
-                    clearInterval(timer);
-                    this.disabled = false;
-                    this.btnTitle = "获取验证码"
-                } else {
-                    this.disabled = true;
-                    this.btnTitle = time + "秒后重试";
-                    time--
-                }
-            },1000)
+    handleLogin() {
+      // 取消错误提醒
+      this.errors = {};
+      // 发送请求
+      this.$axios
+        .post("/api/posts/sms_back", {
+          phone: this.phone,
+          code: this.verifyCode
+        })
+        .then(res => {
+          // 检验成功 设置登录状态并且跳转到/
+          //验证码514471
+          localStorage.setItem("ele_login", res.data.user._id);
+          this.$router.push("/");
+        })
+        .catch(err => {
+          // 返回错误信息
+          this.errors = {
+            code: '账号或验证码错误'
+          };
+          Indicator.close();
+        });
+    },
+    getVerifyCode() {
+      if (this.validatePhone()) {
+        this.validateBtn();
+        // 发送网络请求
+        this.$axios
+          .post("/api/posts/sms_send", {
+            tpl_id: "548827",
+            key: "2d34fe3ca224dc2a678b8862fc9ea4aa",
+            phone: this.phone
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
+    },
+    validateBtn() {
+      let time = 60;
+      let timer = setInterval(() => {
+        if (time == 0) {
+          clearInterval(timer);
+          this.btnTitle = "获取验证码";
+          this.disabled = false;
+        } else {
+          // 倒计时
+          this.btnTitle = time + "秒后重试";
+          this.disabled = true;
+          time--;
         }
+      }, 1000);
+    },
+    validatePhone() {
+      // 验证手机号码
+      if (!this.phone) {
+        this.errors = {
+          phone: "手机号码不能为空"
+        };
+        return false;
+      } else if (!/^1[345678]\d{9}$/.test(this.phone)) {
+        this.errors = {
+          phone: "请填写正确的手机号码"
+        };
+        return false;
+      } else {
+        this.errors = {};
+        return true;
+      }
+    }
     }
 }
 </script>

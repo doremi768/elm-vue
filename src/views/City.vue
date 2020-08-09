@@ -125,8 +125,8 @@ export default {
 <style scoped>
 .city {
   width: 100%;
-  /* height: 100%; */
-  overflow: auto;
+  height: 100%;
+  overflow: none;
   box-sizing: border-box;
   padding-top: 45px;
 }

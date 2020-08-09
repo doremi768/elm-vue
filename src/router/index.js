@@ -28,11 +28,7 @@ Vue.use(VueRouter)
         name: 'me',
         component: () => import('../views/Me.vue')
       },
-      {
-        path: '/Search',
-        name: 'search',
-        component: () => import('../views/Search.vue')
-      },
+
       {
         path: '/Address',
         name: 'address',
@@ -42,37 +38,51 @@ Vue.use(VueRouter)
         path: '/city',
         name: 'city',
         component: () => import('../views/City.vue')
-      },
-      {
-        path: '/shop',
-        name: 'shop',
-        redirect: '/goods',
-        component: () => import('../views/Shops/Shop.vue'),
-        children: [
-          {
-            path: '/goods',
-            name: 'goods',
-            component: () => import('../views/Shops/Goods.vue')
-          },
-          {
-            path: '/seller',
-            name: 'seller',
-            component: () => import('../views/Shops/Seller.vue')
-          },
-          {
-            path: '/comments',
-            name: 'comments',
-            component: () => import('../views/Shops/Comments.vue')
-          }
-        ]
       }
-      
     ]
   },
   {
     path:'/login',
     name: 'login',
     component: () => import('../views/login.vue')
+  },
+  {
+    path: '/Search',
+    name: 'search',
+    component: () => import('../views/Search.vue')
+  },
+  {
+    path: '/shop',
+    name: 'shop',
+    redirect: '/goods',
+    component: () => import('../views/Shops/Shop.vue'),
+    children: [
+      {
+        path: '/goods',
+        name: 'goods',
+        component: () => import('../views/Shops/Goods.vue')
+      },
+      {
+        path: '/seller',
+        name: 'seller',
+        component: () => import('../views/Shops/Seller.vue')
+      },
+      {
+        path: '/comments',
+        name: 'comments',
+        component: () => import('../views/Shops/Comments.vue')
+      }
+    ]
+  },
+  {
+    path: '/myAddress',
+    name: 'myAddress',
+    component: () => import('../views/Orders/MyAddress.vue')
+  },
+  {
+    path: '/addAddress',
+    name: 'addAddress',
+    component: () => import('../views/Orders/AddAddress.vue')
   }
 ]
 
