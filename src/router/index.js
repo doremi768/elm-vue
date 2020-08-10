@@ -83,6 +83,11 @@ Vue.use(VueRouter)
     path: '/addAddress',
     name: 'addAddress',
     component: () => import('../views/Orders/AddAddress.vue')
+  },
+  {
+    path: '/settlement',
+    name: 'settlement',
+    component: () => import('../views/Orders/Settlement.vue')
   }
 ]
 

@@ -42,7 +42,7 @@
         </p>
         <p class="bottomNav-cartdelivery">另需配送费{{shopInfo.rst.float_delivery_fee}}元</p>
       </div>
-      <button class="submit-btn">
+      <button class="submit-btn" @click="settlement">
         <span v-if="isEmpty">¥{{shopInfo.rst.float_minimum_order_amount}}元起送</span>
         <span v-else>去结算</span>
       </button>
@@ -111,6 +111,13 @@ export default {
                 item.count = 0;
                 });
             });
+        },
+        settlement() {
+          this.$store.dispatch("setOrderInfo", {
+            shopInfo: this.shopInfo.rst,
+            selectFoods: this.selectFoods
+          });
+          this.$router.push('/settlement');
         }
     }
 }

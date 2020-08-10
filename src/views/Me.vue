@@ -44,7 +44,6 @@ export default {
       getData() {
         let user_id = localStorage.getItem('ele_login');
         this.$axios(`/api/user/user_info/${user_id}`).then(res => {
-         console.log(res.data)
          this.userInfo = res.data;
         })
       },

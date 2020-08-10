@@ -5,13 +5,19 @@ Vue.use(Vuex)
 
 const types = {
   SET_LOCATION: 'SET_LOCATION',
-  SET_ADDRESS: 'SET_ADDRESS'
+  SET_ADDRESS: 'SET_ADDRESS',
+  ORDER_INFO: 'ORDER_INFO',
+  USER_INFO: 'USER_INFO'
 }
 
 export default new Vuex.Store({
   state: {
     location: {},
-    address: ''
+    address: '',
+    index: 0,
+    orderInfo:null,
+    allAddress: [],
+    userInfo: null,
   },
   mutations: {
    [types.SET_LOCATION](state,location){
@@ -27,7 +33,30 @@ export default new Vuex.Store({
     } else {
       state.address = "";
     }
-  }
+   },
+   index(state){
+     return state.index++;
+   },
+   indexDelete(state) {
+     return state.index--;
+   },
+   [types.ORDER_INFO](state,orderInfo){
+    if(orderInfo){
+      state.orderInfo = orderInfo;
+    } else {
+      state.orderInfo = "";
+    }
+   },
+   getallAddress(state,allAddress){
+     return state.allAddress = allAddress;
+   },
+   [types.USER_INFO](state,userInfo){
+    if(userInfo){
+      state.userInfo = userInfo;
+    } else {
+      state.userInfo = "";
+    }
+   },
   },
   actions: {
     setLocation: ({commit},location) => {
@@ -35,12 +64,33 @@ export default new Vuex.Store({
     },
     setAddress: ({commit},address) => {
       commit(types.SET_ADDRESS,address)
+    },
+    setOrderInfo: ({commit},orderInfo) => {
+      commit(types.ORDER_INFO,orderInfo)
+    },
+    setUserInfo: ({commit},userInfo) => {
+      commit(types.USER_INFO,userInfo)
     }
   },
   modules: {
   },
   getters: {
    location: state => state.location,
-   address: state => state.address
+   address: state => state.address,
+   indexAdd: state => state.index,
+   orderInfo: state => state.orderInfo,
+   allAddress: state => state.allAddress,
+   userInfo: state => state.userInfo,
+   totalPrice: state => {
+     let price = 0;
+     if(state.orderInfo) {
+       const selectFoods = state.orderInfo.selectFoods;
+       selectFoods.forEach( food => {
+         price += (food.activity.fixed_price * food.count);
+       })
+       price += state.orderInfo.shopInfo.float_delivery_fee;
+     }
+     return price;
+   }
   }
 })
