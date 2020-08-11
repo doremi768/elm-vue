@@ -43,10 +43,17 @@ export default {
     computed: {
         city() {
             try{
-              return (
-                 this.$store.getters.location.addressComponent.city ||
-                 this.$store.getters.location.addressComponent.province
-                );
+                if(this.$store.getters.location.addressComponent){
+                    return (
+                    this.$store.getters.location.addressComponent.city ||
+                    this.$store.getters.location.addressComponent.province
+                    )
+                } else {
+                    return (
+                    this.$store.getters.location.regeocode.addressComponent.city ||
+                    this.$store.getters.location.regeocode.addressComponent.province
+                    )
+                }
             } catch(e){
 
             }

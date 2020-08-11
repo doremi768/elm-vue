@@ -15,7 +15,6 @@ export default new Vuex.Store({
   state: {
     location: {},
     address: '',
-    index: 0,
     orderInfo:null,
     allAddress: [],
     userInfo: null,
@@ -38,12 +37,6 @@ export default new Vuex.Store({
     } else {
       state.address = "";
     }
-   },
-   index(state){
-     return state.index++;
-   },
-   indexDelete(state) {
-     return state.index--;
    },
    [types.ORDER_INFO](state,orderInfo){
     if(orderInfo){
@@ -92,7 +85,6 @@ export default new Vuex.Store({
   getters: {
    location: state => state.location,
    address: state => state.address,
-   indexAdd: state => state.index,
    orderInfo: state => state.orderInfo,
    allAddress: state => state.allAddress,
    userInfo: state => state.userInfo,

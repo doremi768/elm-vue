@@ -27,7 +27,7 @@
       </div>
 
       <!-- 新增收货地址 -->
-      <div class="address-view-bottom" @click="$router.push({name:'addAddress',params:{title:'添加地址',index: index}})">
+      <div class="address-view-bottom" @click="$router.push({name:'addAddress',params:{title:'添加地址'}})">
         <i class="fa fa-plus-circle"></i>
         <span>新增收获地址</span>
       </div>
@@ -42,17 +42,15 @@ export default {
         return {
             title: '我的地址',
             allAddress: [],
-            index: 0,
             selectIndex: 0
         }
     },
-    // beforeRouteEnter(to,from,next){
-    //   next(vm => {
-    //       vm.getData();
-    //   })
-    // },
+    beforeRouteEnter(to,from,next){
+      next(vm => {
+        vm.getData()
+      })
+    },
     created() {
-      this.getData()
     },
     components: {
         Header,
@@ -65,7 +63,6 @@ export default {
             continue;
           }
           this.allAddress.push(JSON.parse(infoTest));
-          this.$store.commit('getallAddress',this.allAddress)
         }
       },
       handleEdit(address) {
@@ -75,9 +72,8 @@ export default {
       },
       handleDelete(index) {
         console.log(index)
-        localStorage.removeItem(`info${index}`);
+        localStorage.removeItem(`info${index + 1}`);
         this.allAddress.splice(index,1);
-        this.$store.commit('indexDelete')
       },
       setAddressInfo(address,index) {
         this.selectIndex = index;

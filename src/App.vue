@@ -35,19 +35,17 @@ export default {
 
         function onError (data) {
           // 定位出错
-          console.log(data);
-
           self.getLnyLatLocation();
         }
       });
     },
     getLnyLatLocation() {
+      const self = this;
       AMap.plugin('AMap.CitySearch', function () {
         var citySearch = new AMap.CitySearch()
           citySearch.getLocalCity(function (status, result) {
             if (status === 'complete' && result.info === 'OK') {
               // 查询成功，result即为当前所在城市信息
-              console.log(result);
               AMap.plugin('AMap.Geocoder', function() {
                 var geocoder = new AMap.Geocoder({
                   // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
@@ -55,10 +53,14 @@ export default {
                 })
               
                 var lnglat = result.rectangle.split(';')[0].split(',');
+                geocoder.getAddress(lnglat, function(status, data) {
 
-                geocoder.getAddress(lnglat, function(status, result) {
-                  if (status === 'complete' && result.info === 'OK') {
+
+                  if (status === 'complete' && data.info === 'OK') {
                       // result为对应的地理位置详细信息
+                      console.log(data)
+                    self.$store.dispatch('setLocation',data);
+                    self.$store.dispatch('setAddress',data.regeocode.formattedAddress);
                   }
                 })
 })

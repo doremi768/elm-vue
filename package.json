@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
@@ -11,6 +12,7 @@
     "better-scroll": "^1.15.2",
     "core-js": "^3.6.5",
     "mint-ui": "^2.2.13",
+    "qs": "^6.9.4",
     "request": "^2.88.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

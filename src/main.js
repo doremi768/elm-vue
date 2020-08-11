@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import Mint from 'mint-ui'
+import qs from 'qs'
 Vue.use(Mint);
 
 import { Indicator } from 'mint-ui';
@@ -13,7 +14,11 @@ Vue.prototype.$axios = axios
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
-  // 在发送请求之前做些什么
+  if(config.method == 'post') {
+    config.dada = qs.stringify(config.data)
+  }
+
+  //加载动画
   Indicator.open();
   return config;
 }, function (error) {

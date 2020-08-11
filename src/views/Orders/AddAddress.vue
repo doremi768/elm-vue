@@ -81,11 +81,7 @@ export default {
         TabTag,
         addressSearch
     },
-    computed: {
-      num() {
-        return this.$store.getters.indexAdd
-      }
-    },
+
     beforeRouteEnter(to, form, next) {
       next(vm => {
         if(to.params.allAddress !== undefined) {
@@ -135,9 +131,15 @@ export default {
         });
       },
       addAddress() {
-        console.log(this.num)
-        localStorage.setItem(`info${this.num}`, JSON.stringify(this.addressInfo));
-        this.$store.commit('index')
+        let num = 0;
+        for(let i = 0; i < 10; i++) {
+           let infoTest = localStorage.getItem(`info${i}`);
+          if(infoTest !== null) {
+            num++ ;
+          }
+        }
+        num++;
+        localStorage.setItem(`info${num}`, JSON.stringify(this.addressInfo));
         this.$router.push('/myAddress');
       }
     }

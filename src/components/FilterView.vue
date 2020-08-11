@@ -171,7 +171,7 @@ export default {
 .position_filter{
   background: #fff;
   position: fixed;
-  top: 54px;
+  top: 3.5em;
   width: 100%;
   z-index: 10;
 }

@@ -41,14 +41,22 @@ export default {
     },
     computed: {
         city() {
-            return (
+            if(this.$store.getters.location.addressComponent){
+              return (
                 this.$store.getters.location.addressComponent.city ||
                 this.$store.getters.location.addressComponent.province
-            );
+              )
+            } else {
+              return (
+                this.$store.getters.location.regeocode.addressComponent.city ||
+                this.$store.getters.location.regeocode.addressComponent.province
+              )
+            }
         }
     },
     methods: {
         searchPlace(val) {
+          console.log(1)
             AMap.plugin('AMap.Autocomplete',() => {
             // 实例化Autocomplete
             var autoOptions = {
@@ -58,7 +66,8 @@ export default {
             var autoComplete= new AMap.Autocomplete(autoOptions);
             autoComplete.search(val, (status, result) => {
                 // 搜索成功时，result即是对应的匹配数据
-                  this.areaList = result.tips;
+                console.log(status,result)
+                    this.areaList = result.tips;
             })
          })
         },
@@ -95,16 +104,16 @@ export default {
 }
 .search-box-input {
   flex: 1;
-  border: 1px solid #ddd;
   outline: 0;
   color: #999;
-  height: 7.466667vw;
+  height: 10.466667vw;
   margin-right: 2.666667vw;
-  border-radius: 0.533333vw;
+  border-radius: 3.533333vw;
   background: #f5f5f5;
   padding: 0 2.133333vw;
   display: flex;
   align-items: center;
+  border: none;
 }
 .search-box-input > input {
   margin-left: 2vw;
@@ -117,11 +126,11 @@ button {
   border: none;
 }
 .search-box-btn {
-  margin-right: -2vw;
+  margin-right: -1vw;
   color: #333;
-  border-radius: 0.533333vw;
+  border-radius: 11vw;
   width: 14.8vw;
-  height: 7.466667vw;
+  height: 8.466667vw;
   font-size: 0.9rem;
   white-space: nowrap;
   background-color: #fff;

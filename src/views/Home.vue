@@ -95,10 +95,18 @@ export default {
        }
      },
      city() {
-      return (
-        this.$store.getters.location.addressComponent.city ||
-        this.$store.getters.location.addressComponent.province
-      )
+       if(this.$store.getters.location.addressComponent){
+        return (
+          this.$store.getters.location.addressComponent.city ||
+          this.$store.getters.location.addressComponent.province
+        )
+       } else {
+        return (
+          this.$store.getters.location.regeocode.addressComponent.city ||
+          this.$store.getters.location.regeocode.addressComponent.province
+        )
+       }
+
      }
    },
    created(){
@@ -172,9 +180,10 @@ export default {
 }
 .header,.search_wrap{
   background-color: #009eef;
-  padding: 10px 16px;
+  padding: 10px 16px 5px 16px;
 }
 .header .address_map {
+  margin-top: 5px;
   color: #fff;
 }
 .address_map i {
@@ -235,7 +244,7 @@ export default {
 .foodentry span {
   display: block;
   color: #666;
-  font-size: 0.32rem;
+  font-size: 0.6rem;
 }
 /* 推荐商家 */
 .shoplist-title {
