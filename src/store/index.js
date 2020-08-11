@@ -7,7 +7,8 @@ const types = {
   SET_LOCATION: 'SET_LOCATION',
   SET_ADDRESS: 'SET_ADDRESS',
   ORDER_INFO: 'ORDER_INFO',
-  USER_INFO: 'USER_INFO'
+  USER_INFO: 'USER_INFO',
+  REMARK_INFO: 'REMARK_INFO'
 }
 
 export default new Vuex.Store({
@@ -18,6 +19,10 @@ export default new Vuex.Store({
     orderInfo:null,
     allAddress: [],
     userInfo: null,
+    remarkInfo: {
+      tableware: '',
+      remark: ''
+    }
   },
   mutations: {
    [types.SET_LOCATION](state,location){
@@ -57,6 +62,13 @@ export default new Vuex.Store({
       state.userInfo = "";
     }
    },
+   [types.REMARK_INFO](state,remarkInfo){
+    if(remarkInfo){
+      state.remarkInfo = remarkInfo;
+    } else {
+      state.remarkInfo = null
+    }
+  },
   },
   actions: {
     setLocation: ({commit},location) => {
@@ -70,6 +82,9 @@ export default new Vuex.Store({
     },
     setUserInfo: ({commit},userInfo) => {
       commit(types.USER_INFO,userInfo)
+    },
+    setRemarkInfo: ({commit},remarkInfo) => {
+      commit(types.REMARK_INFO,remarkInfo)
     }
   },
   modules: {
@@ -91,6 +106,7 @@ export default new Vuex.Store({
        price += state.orderInfo.shopInfo.float_delivery_fee;
      }
      return price;
-   }
+   },
+   remarkInfo: state => state.remarkInfo
   }
 })

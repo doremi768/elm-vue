@@ -1,7 +1,7 @@
 <template>
   <div class="settlement">
       <Header :isLeft="true" title="确认订单"/>
-          <div class="view-body">
+          <div class="view-body" v-if="orderInfo">
               <div class="">
                   <!-- 收货地址 -->
                   <section class="cart-address">
@@ -31,12 +31,21 @@
               
                   <!-- 备注信息 -->
                   <section class="checkout-section">
-                    <CartItem title="餐具份数" subHead="未选择"/>
-                    <CartItem title="订单备注" subHead="口味 偏好"/>
+                    <CartItem @clickModel="showTableware=true" title="餐具份数" :subHead="remarkInfo.tableware || '未选择'"/>
+                    <CartItem @clickModel="$router.push('/remark')" title="订单备注" :subHead="remarkInfo.remark || '口味 偏好'"/>
                     <CartItem title="发票信息" subHead="不需要开发票"/>
                   </section>
+
+                  <!-- 显示Tableware -->
+                  <Tableware :isShow="showTableware" @close="showTableware=false"/>
               </div>
           </div>
+
+          <!-- 底部 -->
+          <footer class="action-bar">
+            <span>￥{{totalPrice}}</span>
+            <button @click="handlePay">去支付</button>
+          </footer>
   </div>
 </template>
 
@@ -45,18 +54,22 @@ import Header from '../../components/Headers';
 import Delivery from '../../components/Orders/Delivery'
 import CartGroup from '../../components/Orders/CartGroup'
 import CartItem from '../../components/Orders/CartItem'
+import Tableware from '../../components/Orders/Tableware'
+import {Toast} from 'mint-ui'
 export default {
     name: 'Settlement',
     data() {
         return {
             haveAddress: false,
+            showTableware: false
         }
     },
     components: {
         Header,
         Delivery,
         CartGroup,
-        CartItem
+        CartItem,
+        Tableware
     },
     beforeRouteEnter(to,from,next) {
         next(vm => {
@@ -77,6 +90,9 @@ export default {
         },
         totalPrice() {
           return this.$store.getters.totalPrice;
+        },
+        remarkInfo() {
+          return this.$store.getters.remarkInfo;
         }
     },
     methods: {
@@ -86,6 +102,17 @@ export default {
             } else {
                 this.haveAddress = false
             }
+        },
+        handlePay() {
+          if(!this.userInfo) {
+            Toast({
+              message: '请选择收货地址',
+              position: 'bottom',
+              duration: 2000
+            })
+            return;
+          }
+          this.$router.push('/pay');
         }
     }
 }
@@ -191,7 +218,7 @@ export default {
 }
 .action-bar > span {
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   line-height: 11.733333vw;
   padding-left: 2.666667vw;
   vertical-align: middle;
@@ -206,6 +233,6 @@ export default {
   padding: 0 1.333333vw;
   border: none;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 </style>

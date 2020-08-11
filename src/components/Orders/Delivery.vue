@@ -1,5 +1,5 @@
 <template>
-    <section class="checkout-section">
+    <section class="checkout-section" v-if="shopInfo">
      <div class="delivery">
       <div class="deliver-left">
         <span class="delivery-time">送达时间</span>
