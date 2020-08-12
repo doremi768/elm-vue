@@ -98,6 +98,11 @@ Vue.use(VueRouter)
     path: '/pay',
     name: 'pay',
     component: () => import('../views/Orders/Pay.vue')
+  },
+  {
+    path: '/orderInfo',
+    name: 'orderInfo',
+    component: () => import('../views/Orders/OrderInfo.vue')
   }
 ]
 

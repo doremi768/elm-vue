@@ -71,7 +71,6 @@ export default {
           })
       },
       handleDelete(index) {
-        console.log(index)
         localStorage.removeItem(`info${index + 1}`);
         this.allAddress.splice(index,1);
       },

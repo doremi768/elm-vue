@@ -56,7 +56,6 @@ export default {
     },
     methods: {
         searchPlace(val) {
-          console.log(1)
             AMap.plugin('AMap.Autocomplete',() => {
             // 实例化Autocomplete
             var autoOptions = {
@@ -66,7 +65,6 @@ export default {
             var autoComplete= new AMap.Autocomplete(autoOptions);
             autoComplete.search(val, (status, result) => {
                 // 搜索成功时，result即是对应的匹配数据
-                console.log(status,result)
                     this.areaList = result.tips;
             })
          })

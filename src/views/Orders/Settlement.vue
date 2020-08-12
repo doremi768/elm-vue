@@ -12,7 +12,7 @@
                         <span @click="$router.push('/myAddress')" v-if="userInfo">{{userInfo.address}}{{userInfo.bottom}}</span>
                         <span v-else>
                           <span v-if="haveAddress" @click="$router.push('/myAddress')">选择收货地址</span>
-                          <span v-else  @click="$router.push('/addAddress')">新增收货地址</span>
+                          <span class="mr" v-else  @click="$router.push('/addAddress')">新增收货地址</span>
                           <i class="fa fa-angle-right"></i>
                         </span>
                       </p>
@@ -175,8 +175,8 @@ export default {
   white-space: nowrap;
   max-width: calc(100% - 4vw);
 }
-.address-detail > i {
-  margin-left: 2.133333vw;
+.address-detail i {
+  margin-left: 4.133333vw;
 }
 
 /* 显示送货地址 */

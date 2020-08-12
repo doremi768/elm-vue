@@ -31,6 +31,7 @@
 
 <script>
 import Header from '../../components/Headers';
+import {Toast} from 'mint-ui'
 export default {
     name: 'pay',
     data() {
@@ -55,6 +56,12 @@ export default {
         totalPrice() {
           return this.$store.getters.totalPrice;
         },
+        userInfo() {
+          return this.$store.getters.userInfo;
+        },
+         remarkInfo() {
+          return this.$store.getters.remarkInfo;
+        },
     },
     methods: {
         countTimeDown() {
@@ -72,7 +79,7 @@ export default {
 
                 if(second == "00") {
                     second = 59;
-                    mintue--;
+                    minute--;
                 }
                 if(minute < 10) {
                     minute = "0" + minute;
@@ -85,29 +92,18 @@ export default {
             },1000)
         },
         pay() {
-            fetch('http://www.thenewstep.cn/wxzf/example/jsapi/php',{
-                method: 'POST',
-                headers: {
-                    'Content-type':'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(data => {
-                this.onBridgeReady(data)
-            })
-            .catch(err => {
-                alert("请求失败")
-            })
-        },
-        onBridgeReady(data){
-             WeixinJSBridge.invoke('getBrandWCPayRequest', {},(res) => {
-                    if(res.err_msg == "get_brand_wcpay_request:ok" ){
-                    // 使用以上方式判断前端返回,微信团队郑重提示：
-                            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-                    alert('支付成功')
-                } 
-            }); 
+          Toast({
+              message: '支付成功',
+              duration: 1000
+          });
+
+          let orderlist = {
+            orderInfo: this.orderInfo,
+            userInfo: this.userInfo,
+            totalPrice: this.totalPrice,
+            remarkInfo: this.remarkInf
+          };
+          this.$router.push({name:'order',params:{orderlist:orderlist}})
         }
     }
 }

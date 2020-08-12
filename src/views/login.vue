@@ -61,25 +61,26 @@ export default {
     handleLogin() {
       // 取消错误提醒
       this.errors = {};
+      localStorage.setItem("ele_login", '1');
+      this.$router.push("/");
       // 发送请求
-      this.$axios
-        .post("/api/posts/sms_back", {
-          phone: this.phone,
-          code: this.verifyCode
-        })
-        .then(res => {
-          // 检验成功 设置登录状态并且跳转到/
-          //验证码514471
-          localStorage.setItem("ele_login", res.data.user._id);
-          this.$router.push("/");
-        })
-        .catch(err => {
-          // 返回错误信息
-          this.errors = {
-            code: '账号或验证码错误'
-          };
-          Indicator.close();
-        });
+      // this.$axios.post("/api/posts/sms_back", {
+      //     phone: this.phone,
+      //     code: this.verifyCode
+      //   })
+      //   .then(res => {
+      //     // 检验成功 设置登录状态并且跳转到/
+      //     //验证码514471
+      //     localStorage.setItem("ele_login", res.data.user._id);
+      //     this.$router.push("/");
+      //   })
+      //   .catch(err => {
+      //     // 返回错误信息
+      //     this.errors = {
+      //       code: '账号或验证码错误'
+      //     };
+      //     Indicator.close();
+      //   });
     },
     getVerifyCode() {
       if (this.validatePhone()) {

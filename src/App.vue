@@ -58,7 +58,6 @@ export default {
 
                   if (status === 'complete' && data.info === 'OK') {
                       // result为对应的地理位置详细信息
-                      console.log(data)
                     self.$store.dispatch('setLocation',data);
                     self.$store.dispatch('setAddress',data.regeocode.formattedAddress);
                   }
