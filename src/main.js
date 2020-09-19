@@ -12,8 +12,9 @@ Vue.prototype.$axios = axios
 
 Vue.use(Mint);
 
-axios.defaults.baseURL = 'https://element-interface.herokuapp.com';
 
+// axios.defaults.baseURL = 'https://element-interface.herokuapp.com';
+axios.defaults.baseURL = 'https://eleme4-beyond-50440.herokuapp.com'
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
   //加载动画
